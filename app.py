@@ -1,4 +1,4 @@
-﻿import streamlit as st
+import streamlit as st
 import numpy as np
 import cv2
 import os
@@ -268,32 +268,83 @@ elif mode == "🎥 Upload Video":
 #  MODE: WEBCAM
 # ══════════════════════════════════════════════
 elif mode == "📹 Webcam (Live)":
-    st.markdown("<div class='section-label'>Live Webcam Detection</div>", unsafe_allow_html=True)
-    st.markdown("""<div class='glass-card'>
-        <p style='color:#94a3b8;margin:0'>
-        📌 <strong style='color:#e2e8f0'>Live Webcam</strong><br>
-        Click <em>Start Webcam</em>. Press <strong>Q</strong> in the OpenCV window to stop.
-        </p></div>""", unsafe_allow_html=True)
+    st.markdown("<div class='section-label'>Webcam Detection</div>", unsafe_allow_html=True)
 
-    if st.button("📹 Start Webcam Detection"):
-        import imutils
-        from imutils.video import VideoStream
-        import time
-        st.info("🔴 Webcam running — press **Q** in the OpenCV window to quit.")
-        vs = VideoStream(src=0).start()
-        time.sleep(1.5)
-        while True:
-            frame = vs.read()
-            if frame is None:
-                break
-            frame = imutils.resize(frame, width=700)
-            boxes = detect_faces(frame, face_net, conf_thresh)
-            ann, _ = predict_masks(frame, boxes, mask_model)
-            cv2.imshow("Face Mask Detector — Q to quit", ann)
-            if cv2.waitKey(1) & 0xFF == ord("q"):
-                break
-        vs.stop(); cv2.destroyAllWindows()
-        st.success("✅ Webcam session ended.")
+    cam_mode = st.radio(
+        "Camera Input Source",
+        ["📸 In-Browser Camera (Works on Cloud & Local)", "🖥️ Native OpenCV Window (Local machine only)"],
+        horizontal=True,
+    )
+
+    if cam_mode == "📸 In-Browser Camera (Works on Cloud & Local)":
+        st.markdown("""<div class='glass-card'>
+            <p style='color:#94a3b8;margin:0'>
+            Capture a live picture from your device camera to check mask compliance instantly.
+            </p></div>""", unsafe_allow_html=True)
+        cam_photo = st.camera_input("Take a snapshot")
+        if cam_photo:
+            pil_img = Image.open(cam_photo).convert("RGB")
+            img_arr = np.array(pil_img)
+            img_bgr = cv2.cvtColor(img_arr, cv2.COLOR_RGB2BGR)
+
+            with st.spinner("🔍 Detecting…"):
+                boxes = detect_faces(img_bgr, face_net, conf_thresh)
+                annotated_bgr, results = predict_masks(img_bgr, boxes, mask_model)
+                annotated_rgb = cv2.cvtColor(annotated_bgr, cv2.COLOR_BGR2RGB)
+
+            c1, c2 = st.columns(2, gap="large")
+            with c1:
+                st.markdown("<div class='glass-card'>**📸 Captured Snapshot**", unsafe_allow_html=True)
+                st.image(pil_img, use_container_width=True)
+                st.markdown("</div>", unsafe_allow_html=True)
+            with c2:
+                st.markdown("<div class='glass-card'>**🔎 Detection Result**", unsafe_allow_html=True)
+                st.image(annotated_rgb, use_container_width=True)
+                st.markdown("</div>", unsafe_allow_html=True)
+
+            if not results:
+                st.warning("⚠️ No faces detected. Ensure your face is clearly visible.")
+            else:
+                n_mask = sum(1 for r in results if r["label"] == "Mask")
+                n_no_mask = len(results) - n_mask
+                sc1, sc2, sc3 = st.columns(3)
+                sc1.metric("👤 Faces", len(results))
+                sc2.metric("✅ With Mask", n_mask)
+                sc3.metric("❌ Without Mask", n_no_mask)
+                for idx, r in enumerate(results, 1):
+                    css = "result-mask" if r["label"] == "Mask" else "result-nomask"
+                    icon = "✅" if r["label"] == "Mask" else "❌"
+                    st.markdown(f"<div class='{css}'>{icon} Face {idx}: {r['label']} — {r['confidence']:.1f}% confidence</div>", unsafe_allow_html=True)
+
+    else:
+        st.markdown("""<div class='glass-card'>
+            <p style='color:#94a3b8;margin:0'>
+            📌 <strong style='color:#e2e8f0'>Native OpenCV Window</strong><br>
+            Runs on your local machine only. Click <em>Start Webcam</em> and press <strong>Q</strong> in the window to quit.
+            </p></div>""", unsafe_allow_html=True)
+
+        if st.button("📹 Start Native Webcam"):
+            try:
+                import imutils
+                from imutils.video import VideoStream
+                import time
+                st.info("🔴 Webcam running — press **Q** in the OpenCV window to quit.")
+                vs = VideoStream(src=0).start()
+                time.sleep(1.5)
+                while True:
+                    frame = vs.read()
+                    if frame is None:
+                        break
+                    frame = imutils.resize(frame, width=700)
+                    boxes = detect_faces(frame, face_net, conf_thresh)
+                    ann, _ = predict_masks(frame, boxes, mask_model)
+                    cv2.imshow("Face Mask Detector — Q to quit", ann)
+                    if cv2.waitKey(1) & 0xFF == ord("q"):
+                        break
+                vs.stop(); cv2.destroyAllWindows()
+                st.success("✅ Webcam session ended.")
+            except Exception as e:
+                st.error(f"Cannot open native display window in this environment: {e}")
 
 # ──────────────────────────────────────────────
 #  FOOTER

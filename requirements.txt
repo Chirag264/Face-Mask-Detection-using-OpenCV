@@ -1,11 +1,10 @@
-﻿# Core ML & DL
+# Core ML & DL
 tensorflow>=2.4.0
 keras>=2.4.0
 scikit-learn>=0.23.0
 
 # Computer Vision
-opencv-python>=4.5.0
-opencv-contrib-python>=4.5.0
+opencv-python-headless>=4.5.0
 imutils>=0.5.3
 
 # Image processing
