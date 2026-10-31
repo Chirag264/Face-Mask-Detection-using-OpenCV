@@ -1,0 +1,40 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Jupyter Notebooks checkpoints
+.ipynb_checkpoints/
+
+# Dataset (large image folders - download separately from Kaggle)
+Dataset/
+
+# Large video file (>50MB) - download from original repo
+Images/Demonstration video of both models(Compressed).mp4
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs & temp
+*.log
+*.tmp
+tmp/
