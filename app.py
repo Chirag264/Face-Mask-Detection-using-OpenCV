@@ -615,6 +615,7 @@ elif nav_choice == "🎥 Video Detection":
                 "confidence_sum": 0.0,
             }
 
+            timeline = []
             frame_idx = 0
             t_start = time.time()
 
@@ -630,12 +631,22 @@ elif nav_choice == "🎥 Video Detection":
 
                     stats["frames_processed"] += 1
                     stats["total_faces"] += len(detections)
+                    frame_mask = 0
+                    frame_nomask = 0
                     for d in detections:
                         if d["label"] == "Mask":
                             stats["mask_detections"] += 1
+                            frame_mask += 1
                         else:
                             stats["nomask_detections"] += 1
+                            frame_nomask += 1
                         stats["confidence_sum"] += d["confidence"]
+
+                    timeline.append({
+                        "Frame": frame_idx + 1,
+                        "Mask Detections": frame_mask,
+                        "No-Mask Detections": frame_nomask,
+                    })
 
                     # Update preview every 8 frames to maintain smooth UI
                     if frame_idx % 8 == 0:
@@ -671,6 +682,13 @@ elif nav_choice == "🎥 Video Detection":
             vc2.metric("👤 Avg Faces / Frame", f"{avg_faces_per_frame:.2f}")
             vc3.metric("😷 Mask Detections", stats["mask_detections"])
             vc4.metric("❌ No-Mask Detections", stats["nomask_detections"])
+
+            # Render optional detection timeline chart
+            if len(timeline) > 1:
+                import pandas as pd
+                df_timeline = pd.DataFrame(timeline).set_index("Frame")
+                st.markdown("#### 📈 Detection Counts Over Video Timeline")
+                st.area_chart(df_timeline, color=["#22c55e", "#ef4444"])
 
             if os.path.exists(out_tmp_path):
                 with open(out_tmp_path, "rb") as vf:
