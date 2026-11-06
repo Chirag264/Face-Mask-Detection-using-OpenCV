@@ -398,20 +398,19 @@ if nav_choice == "🖼️ Image Detection":
     with btn_col1:
         if st.button("🎭 Sample: Mask"):
             sample_img_path = find_asset([
+                os.path.join("assets", "sample_mask.jpg"),
                 os.path.join("Dataset", "with_mask", "with_mask_10.jpg"),
-                os.path.join("assets", "sample_result.png")
             ])
     with btn_col2:
         if st.button("👥 Sample: Multi-Face"):
             sample_img_path = find_asset([
-                os.path.join("assets", "sample_result.png"),
-                os.path.join("Images", "testing_snap1.png")
+                os.path.join("assets", "sample_multi_face.jpg"),
             ])
     with btn_col3:
         if st.button("👤 Sample: No Mask"):
             sample_img_path = find_asset([
+                os.path.join("assets", "sample_nomask.jpg"),
                 os.path.join("Dataset", "without_mask", "without_mask_10.jpg"),
-                os.path.join("Images", "testing_snap2.png")
             ])
 
     uploaded_file = st.file_uploader(
