@@ -64,9 +64,7 @@ MaskVision AI addresses these challenges through a lightweight, optimized archit
 
 - **🖼️ Static Image Detection:** Upload any JPG, PNG, or WEBP image. The pipeline detects single or multiple faces, calculates mask compliance, renders high-contrast bounding boxes, and generates a structured statistical breakdown with downloadable results.
 - **🎥 Video Detection & Analytics:** Processes uploaded MP4, AVI, or MOV files frame-by-frame with progress indicators, real-time preview frames, safe temporary file management, and annotated video export.
-- **📷 Live Camera Detection:**
-  - *In-Browser Camera:* Cross-platform snapshot capture working smoothly across local and cloud deployments (including Streamlit Cloud and mobile browsers).
-  - *Native OpenCV Stream:* Interactive webcam stream for local machine execution with start/stop keyboard controls (`Q` to exit).
+- **📷 Live Camera Detection:** In-browser camera snapshot capture working smoothly across local and cloud environments without requiring native OS display windows.
 - **📊 Detection Analytics:** Real-time metrics tracking total faces detected, count/percentage wearing masks, count/percentage unmasked, and average confidence scores.
 - **🎚️ Configurable Confidence Slider:** User-adjustable face detection confidence threshold (20% to 95%) with clear separation between face localization probability and mask classification certainty.
 - **🧠 Deep Learning Model Insights:** Dedicated analytics tab displaying verified test accuracy, precision, recall, F1-scores, the complete 1,511-image confusion matrix, and 30-epoch training loss/accuracy curves.
