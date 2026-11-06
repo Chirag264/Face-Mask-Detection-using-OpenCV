@@ -5,6 +5,6 @@ streamlit>=1.35.0
 opencv-python-headless>=4.8.0
 Pillow>=9.5.0
 
-# Deep Learning Runtime (Fast CPU inference, Keras 2 LTS)
-tensorflow-cpu==2.15.0
+# Deep Learning Runtime (High-speed CPU inference)
+tensorflow-cpu>=2.16.0
 numpy>=1.23.5,<2.0.0
