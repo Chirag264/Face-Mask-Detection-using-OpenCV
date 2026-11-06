@@ -1,16 +1,10 @@
-# Core Web Application Framework
-streamlit>=1.28.0
+# Core Web Framework
+streamlit>=1.35.0
 
-# Computer Vision & Image Processing
+# Computer Vision (Cloud-optimized headless OpenCV)
 opencv-python-headless>=4.8.0
-Pillow>=9.0.0
-imutils>=0.5.4
+Pillow>=9.5.0
 
-# Deep Learning & Numerical Computing
-tensorflow-cpu>=2.10.0
-numpy>=1.22.0,<2.0.0
-
-# Analytics & Visualization
-matplotlib>=3.5.0
-seaborn>=0.12.0
-scikit-learn>=1.0.0
+# Deep Learning Runtime (Fast CPU inference, Keras 2 LTS)
+tensorflow-cpu==2.15.0
+numpy>=1.23.5,<2.0.0
